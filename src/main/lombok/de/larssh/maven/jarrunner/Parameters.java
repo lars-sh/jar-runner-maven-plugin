@@ -24,7 +24,7 @@ import lombok.Getter;
  * of {@link RunMojo}.
  */
 @Getter
-class Parameters {
+public class Parameters {
 	/**
 	 * User argument: Arguments
 	 *

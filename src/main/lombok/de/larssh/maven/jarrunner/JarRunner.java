@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-class JarRunner {
+public class JarRunner {
 	/**
 	 * Parameters object maintaining the injected system objects and user arguments
 	 * of {@link RunMojo}
