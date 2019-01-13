@@ -132,7 +132,8 @@ public class RunMojo extends AbstractMojo {
 
 	/** {@inheritDoc} */
 	@Override
-	@SuppressFBWarnings(value = "REC_CATCH_EXCEPTION", justification = "catching any exception at execution root")
+	@SuppressFBWarnings(value = { "REC_CATCH_EXCEPTION", "WEM_WEAK_EXCEPTION_MESSAGING" },
+			justification = "catching any exception at execution root")
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			new JarRunner(new Parameters(Objects.requireNonNull(mavenSession),

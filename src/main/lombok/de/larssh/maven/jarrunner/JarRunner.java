@@ -1,11 +1,12 @@
 package de.larssh.maven.jarrunner;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.jar.Attributes.Name;
@@ -19,9 +20,11 @@ import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 
-import de.larssh.utils.AetherUtils;
 import de.larssh.utils.SystemUtils;
+import de.larssh.utils.maven.AetherUtils;
+import de.larssh.utils.maven.DependencyScope;
 import de.larssh.utils.text.Strings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +41,8 @@ public class JarRunner {
 	/**
 	 * Parameters object maintaining the injected system objects and user arguments
 	 * of {@link RunMojo}
+	 *
+	 * @return parameters
 	 */
 	Parameters parameters;
 
@@ -60,6 +65,7 @@ public class JarRunner {
 	 *                                       started application stopped with an
 	 *                                       exit value not equal to zero
 	 */
+	@SuppressFBWarnings(value = "COMMAND_INJECTION", justification = "command is really meant to be injected")
 	public void run() throws DependencyResolutionException, IOException, MojoFailureException {
 		// Resolve Dependencies
 		final DependencyResult dependencyResult = resolveDependencies();
@@ -132,7 +138,7 @@ public class JarRunner {
 
 		// by Manifest
 		final File jarFile = dependencyResult.getRoot().getArtifact().getFile();
-		try (JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile))) {
+		try (JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(jarFile.toPath()))) {
 			final String mainClass = jarInputStream.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS);
 			if (!Strings.isBlank(mainClass)) {
 				return mainClass;
@@ -154,10 +160,13 @@ public class JarRunner {
 	 */
 	private DependencyResult resolveDependencies() throws DependencyResolutionException {
 		final Parameters p = getParameters();
-		final CollectRequest collectRequest = new CollectRequest(new Dependency(p.getArtifact(), "compile"),
-				AetherUtils.getRemoteRepositories(p.getMavenSession()));
-		final DependencyRequest dependencyRequest = new DependencyRequest(collectRequest,
-				new ScopeDependencyFilter(Arrays.asList("compile", "runtime"), null));
+		final CollectRequest collectRequest
+				= new CollectRequest(new Dependency(p.getArtifact(), DependencyScope.COMPILE.getValue()),
+						AetherUtils.getRemoteRepositories(p.getMavenSession()));
+		final Collection<String> includedScopes
+				= Arrays.asList(DependencyScope.COMPILE.getValue(), DependencyScope.RUNTIME.getValue());
+		final DependencyRequest dependencyRequest
+				= new DependencyRequest(collectRequest, new ScopeDependencyFilter(includedScopes, null));
 		return p.getRepositorySystem().resolveDependencies(p.getRepositorySystemSession(), dependencyRequest);
 	}
 

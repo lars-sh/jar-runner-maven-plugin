@@ -50,7 +50,7 @@
 	</ciManagement>
 
 	<properties>
-		<checkstyle.skip>true</checkstyle.skip>
+		<spotbugs.excludeFilterFile>${project.basedir}/spotbugs-excludes.xml</spotbugs.excludeFilterFile>
 	</properties>
 
 	<dependencies>
