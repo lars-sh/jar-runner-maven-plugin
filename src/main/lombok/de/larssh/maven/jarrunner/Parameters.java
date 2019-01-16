@@ -1,11 +1,11 @@
 package de.larssh.maven.jarrunner;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -151,10 +151,9 @@ public class Parameters {
 		this.artifact = new DefaultArtifact(artifact);
 		this.classPathFormat = Optionals.ofNonBlank(classPathFormat);
 		this.mainClass = Optionals.ofNonBlank(mainClass);
-		this.arguments = arguments == null ? emptyList() : Collections.unmodifiableList(new ArrayList<>(arguments));
+		this.arguments = arguments == null ? emptyList() : unmodifiableList(new ArrayList<>(arguments));
 		this.javaPath = Optionals.ofNonBlank(javaPath).map(Paths::get);
-		this.javaOptions
-				= javaOptions == null ? emptyList() : Collections.unmodifiableList(new ArrayList<>(javaOptions));
+		this.javaOptions = javaOptions == null ? emptyList() : unmodifiableList(new ArrayList<>(javaOptions));
 		this.workingDirectory = Optionals.ofNonBlank(workingDirectory).map(Paths::get);
 	}
 }

@@ -1,11 +1,12 @@
 package de.larssh.maven.jarrunner;
 
+import static java.util.Arrays.asList;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -164,7 +165,7 @@ public class JarRunner {
 				= new CollectRequest(new Dependency(p.getArtifact(), DependencyScope.COMPILE.getValue()),
 						AetherUtils.getRemoteRepositories(p.getMavenSession()));
 		final Collection<String> includedScopes
-				= Arrays.asList(DependencyScope.COMPILE.getValue(), DependencyScope.RUNTIME.getValue());
+				= asList(DependencyScope.COMPILE.getValue(), DependencyScope.RUNTIME.getValue());
 		final DependencyRequest dependencyRequest
 				= new DependencyRequest(collectRequest, new ScopeDependencyFilter(includedScopes, null));
 		return p.getRepositorySystem().resolveDependencies(p.getRepositorySystemSession(), dependencyRequest);
