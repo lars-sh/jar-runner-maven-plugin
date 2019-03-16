@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 
 Download at TODO
 
+### Changed
+* Use Maven version prerequisite
+
 ### Fixed
 * Support for Maven versions unequal to 3.6.0
 

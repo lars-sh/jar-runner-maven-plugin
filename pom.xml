@@ -30,6 +30,10 @@
 		</developer>
 	</developers>
 
+	<prerequisites>
+		<maven>3.3.9</maven>
+	</prerequisites>
+
 	<scm>
 		<connection>scm:git:git@github.com:lars-sh/jar-runner-maven-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:lars-sh/jar-runner-maven-plugin.git</developerConnection>
