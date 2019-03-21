@@ -3,10 +3,4 @@
 <suppressions>
 	<!-- Suppress anything inside generated HelpMojo -->
 	<suppress files="^.*[/\\]de[/\\]larssh[/\\]maven[/\\]jarrunner[/\\]HelpMojo\.java$" checks="^.*$" />
-
-	<!-- Suppress illegal catches, that have been verified -->
-	<suppress files="^.*[/\\]de[/\\]larssh[/\\]maven[/\\]jarrunner[/\\]RunMojo\.java$" checks="IllegalCatchCheck" message="^Catching &apos;Exception&apos; is not allowed\.$" lines="120" columns="11" />
-
-	<!-- Suppress too many parameters, that have been verified -->
-	<suppress files="^.*[/\\]de[/\\]larssh[/\\]maven[/\\]jarrunner[/\\]Parameters\.java$" checks="ParameterNumberCheck" message="^More than 7 parameters \(found 10\)\.$" lines="105" columns="12" />
 </suppressions>

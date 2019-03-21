@@ -135,6 +135,7 @@ public class Parameters {
 	 * @param javaOptions             Java Options
 	 * @param workingDirectory        Working Directory
 	 */
+	@SuppressWarnings("checkstyle:ParameterNumber")
 	public Parameters(final MavenSession mavenSession,
 			final RepositorySystem repositorySystem,
 			final RepositorySystemSession repositorySystemSession,

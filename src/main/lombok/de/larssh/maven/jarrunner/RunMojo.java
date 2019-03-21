@@ -132,6 +132,7 @@ public class RunMojo extends AbstractMojo {
 
 	/** {@inheritDoc} */
 	@Override
+	@SuppressWarnings("checkstyle:IllegalCatch")
 	@SuppressFBWarnings(value = { "REC_CATCH_EXCEPTION", "WEM_WEAK_EXCEPTION_MESSAGING" },
 			justification = "catching any exception at execution root")
 	public void execute() throws MojoExecutionException, MojoFailureException {
