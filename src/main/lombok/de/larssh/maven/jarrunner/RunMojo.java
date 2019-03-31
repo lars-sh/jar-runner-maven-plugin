@@ -1,7 +1,6 @@
 package de.larssh.maven.jarrunner;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -13,6 +12,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 
+import de.larssh.utils.Nullables;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.NoArgsConstructor;
@@ -137,9 +137,9 @@ public class RunMojo extends AbstractMojo {
 			justification = "catching any exception at execution root")
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
-			new JarRunner(new Parameters(Objects.requireNonNull(mavenSession),
-					Objects.requireNonNull(repositorySystem),
-					Objects.requireNonNull(repositorySystemSession),
+			new JarRunner(new Parameters(Nullables.orElseThrow(mavenSession),
+					Nullables.orElseThrow(repositorySystem),
+					Nullables.orElseThrow(repositorySystemSession),
 					artifact,
 					mainClass,
 					arguments,
