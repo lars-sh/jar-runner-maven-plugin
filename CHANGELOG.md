@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 
 <a name="0.9.2"></a>
 
-## [0.9.2-SNAPSHOT](https://github.com/lars-sh/jar-runner-maven-plugin/compare/e09a123af35b8d6af6ebf03a0e4a010ce32a10af...master)
+## [0.9.2](https://github.com/lars-sh/jar-runner-maven-plugin/compare/e09a123af35b8d6af6ebf03a0e4a010ce32a10af...master) (2019-05-06)
 
-Download at TODO
+Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.2/jar)
 
 ### Changed
 * Use Maven version prerequisite
