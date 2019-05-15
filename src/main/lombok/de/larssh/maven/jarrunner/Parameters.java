@@ -135,7 +135,7 @@ public class Parameters {
 	 * @param javaOptions             Java Options
 	 * @param workingDirectory        Working Directory
 	 */
-	@SuppressWarnings("checkstyle:ParameterNumber")
+	@SuppressWarnings({ "checkstyle:ParameterNumber", "PMD.ExcessiveParameterList" })
 	public Parameters(final MavenSession mavenSession,
 			final RepositorySystem repositorySystem,
 			final RepositorySystemSession repositorySystemSession,

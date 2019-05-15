@@ -159,6 +159,7 @@ public class JarRunner {
 	 * @return the resolved dependencies
 	 * @throws DependencyResolutionException if resolving dependencies failed
 	 */
+	@SuppressWarnings("PMD.ShortVariable")
 	private DependencyResult resolveDependencies() throws DependencyResolutionException {
 		final Parameters p = getParameters();
 		final CollectRequest collectRequest
