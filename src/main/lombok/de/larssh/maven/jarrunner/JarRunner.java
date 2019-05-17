@@ -1,6 +1,7 @@
 package de.larssh.maven.jarrunner;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,14 +9,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarInputStream;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
@@ -154,22 +158,62 @@ public class JarRunner {
 	}
 
 	/**
+	 * Creates a list of repositories based on the repositories given by the user
+	 * via parameter and the system repositories.
+	 *
+	 * <p>
+	 * The user can leave parameters empty. The system repositories can be ignored
+	 * using the system parameter "ignoreSystemRepositories".
+	 *
+	 * <p>
+	 * In case of multiple repositories with the same ID the first repository in
+	 * order is used. Following repositories with the same ID are ignored.
+	 * Repositories of user parameters are handled at first.
+	 *
+	 * @return list of repositories
+	 */
+	@SuppressFBWarnings(value = "PSC_PRESIZE_COLLECTIONS",
+			justification = "presizing collections is not worth it in this place")
+	private List<RemoteRepository> getRepositories() {
+		final Set<String> idsForExistanceCheck = new HashSet<>();
+
+		// via Parameter
+		final List<RemoteRepository> repositories = new ArrayList<>();
+		for (final RemoteRepository repository : getParameters().getRepositories()) {
+			if (idsForExistanceCheck.add(repository.getId())) {
+				repositories.add(repository);
+			}
+		}
+
+		// via System
+		if (!getParameters().isIgnoreSystemRepositories()) {
+			final List<RemoteRepository> systemRepositories
+					= AetherUtils.getRemoteRepositories(getParameters().getMavenSession());
+			for (final RemoteRepository repository : systemRepositories) {
+				if (idsForExistanceCheck.add(repository.getId())) {
+					repositories.add(repository);
+				}
+			}
+		}
+
+		return unmodifiableList(repositories);
+	}
+
+	/**
 	 * Resolves the dependencies for the artifact given by user argument.
 	 *
 	 * @return the resolved dependencies
 	 * @throws DependencyResolutionException if resolving dependencies failed
 	 */
-	@SuppressWarnings("PMD.ShortVariable")
 	private DependencyResult resolveDependencies() throws DependencyResolutionException {
-		final Parameters p = getParameters();
-		final CollectRequest collectRequest
-				= new CollectRequest(new Dependency(p.getArtifact(), DependencyScope.COMPILE.getValue()),
-						AetherUtils.getRemoteRepositories(p.getMavenSession()));
+		final Dependency dependency = new Dependency(getParameters().getArtifact(), DependencyScope.COMPILE.getValue());
+		final CollectRequest collectRequest = new CollectRequest(dependency, getRepositories());
 		final Collection<String> includedScopes
 				= asList(DependencyScope.COMPILE.getValue(), DependencyScope.RUNTIME.getValue());
 		final DependencyRequest dependencyRequest
 				= new DependencyRequest(collectRequest, new ScopeDependencyFilter(includedScopes, null));
-		return p.getRepositorySystem().resolveDependencies(p.getRepositorySystemSession(), dependencyRequest);
+		return getParameters().getRepositorySystem()
+				.resolveDependencies(getParameters().getRepositorySystemSession(), dependencyRequest);
 	}
 
 	/**

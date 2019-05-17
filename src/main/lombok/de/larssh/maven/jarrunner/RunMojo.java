@@ -58,7 +58,7 @@ public class RunMojo extends AbstractMojo {
 	private RepositorySystemSession repositorySystemSession = null;
 
 	/**
-	 * User argument: Artifact to execute
+	 * Artifact to load
 	 */
 	@NonFinal
 	@Nullable
@@ -66,7 +66,44 @@ public class RunMojo extends AbstractMojo {
 	private String artifact = null;
 
 	/**
-	 * User argument: Main Class
+	 * List of Maven repository URLs
+	 *
+	 * <p>
+	 * User name and password can be inserted as URI user info, delimited by colon.
+	 * Order is: user name, password converter (either base64 or plain), password. A
+	 * repository ID can be set using the URI fragment.
+	 *
+	 * <p>
+	 * Example: http://user:base64:cGFzc3dvcmQ=@repository.example.com/path#id
+	 *
+	 * <p>
+	 * In case of multiple repositories with the same ID the first repository in
+	 * order is used. Following repositories with the same ID are ignored.
+	 * Repositories of user parameters are handled at first.
+	 *
+	 * <p>
+	 * Repository layout and proxy cannot be set via user argument.
+	 *
+	 * <p>
+	 * Default: none
+	 */
+	@NonFinal
+	@Nullable
+	@Parameter(property = "repositories")
+	private List<String> repositories = null;
+
+	/**
+	 * Ignore system repositories
+	 *
+	 * <p>
+	 * Default: false
+	 */
+	@NonFinal
+	@Parameter(property = "ignoreSystemRepositories")
+	private boolean ignoreSystemRepositories = false;
+
+	/**
+	 * Main class to execute
 	 *
 	 * <p>
 	 * Default: the artifacts JARs main class
@@ -77,7 +114,7 @@ public class RunMojo extends AbstractMojo {
 	private String mainClass = null;
 
 	/**
-	 * User argument: Arguments
+	 * List of arguments for the to-be-executed application
 	 *
 	 * <p>
 	 * Default: none
@@ -88,7 +125,8 @@ public class RunMojo extends AbstractMojo {
 	private List<String> arguments = null;
 
 	/**
-	 * User argument: Class Path Format
+	 * Formatter value that allows modifying the class path. Substring "%s" is
+	 * replaced with the generated class path.
 	 *
 	 * <p>
 	 * Default: "%s"
@@ -99,10 +137,10 @@ public class RunMojo extends AbstractMojo {
 	private String classPathFormat = null;
 
 	/**
-	 * User argument: Path to Java executable
+	 * Path to the Java executable
 	 *
 	 * <p>
-	 * Default: current Java executable
+	 * Default: path to the Java executable used by Maven
 	 */
 	@NonFinal
 	@Nullable
@@ -110,7 +148,7 @@ public class RunMojo extends AbstractMojo {
 	private String javaPath = null;
 
 	/**
-	 * User argument: Java Options
+	 * List of options for the Java VM
 	 *
 	 * <p>
 	 * Default: none
@@ -121,7 +159,7 @@ public class RunMojo extends AbstractMojo {
 	private List<String> javaOptions = null;
 
 	/**
-	 * User argument: Working Directory
+	 * Working Directory for the to-be-executed application
 	 *
 	 * <p>
 	 * Default: current working directory
@@ -150,6 +188,8 @@ public class RunMojo extends AbstractMojo {
 					classPathFormat,
 					javaPath,
 					javaOptions,
+					repositories,
+					ignoreSystemRepositories,
 					workingDirectory)).run();
 		} catch (final MojoFailureException e) {
 			throw e;
