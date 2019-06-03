@@ -66,43 +66,6 @@ public class RunMojo extends AbstractMojo {
 	private String artifact = null;
 
 	/**
-	 * List of Maven repository URLs
-	 *
-	 * <p>
-	 * User name and password can be inserted as URI user info, delimited by colon.
-	 * Order is: user name, password converter (either base64 or plain), password. A
-	 * repository ID can be set using the URI fragment.
-	 *
-	 * <p>
-	 * Example: http://user:base64:cGFzc3dvcmQ=@repository.example.com/path#id
-	 *
-	 * <p>
-	 * In case of multiple repositories with the same ID the first repository in
-	 * order is used. Following repositories with the same ID are ignored.
-	 * Repositories of user parameters are handled at first.
-	 *
-	 * <p>
-	 * Repository layout and proxy cannot be set via user argument.
-	 *
-	 * <p>
-	 * Default: none
-	 */
-	@NonFinal
-	@Nullable
-	@Parameter(property = "repositories")
-	private List<String> repositories = null;
-
-	/**
-	 * Ignore system repositories
-	 *
-	 * <p>
-	 * Default: false
-	 */
-	@NonFinal
-	@Parameter(property = "ignoreSystemRepositories")
-	private boolean ignoreSystemRepositories = false;
-
-	/**
 	 * Main class to execute
 	 *
 	 * <p>
@@ -157,6 +120,43 @@ public class RunMojo extends AbstractMojo {
 	@Nullable
 	@Parameter(property = "javaOptions")
 	private List<String> javaOptions = null;
+
+	/**
+	 * List of Maven repository URLs
+	 *
+	 * <p>
+	 * User name and password can be inserted as URI user info, delimited by colon.
+	 * Order is: user name, password converter (either base64 or plain), password. A
+	 * repository ID can be set using the URI fragment.
+	 *
+	 * <p>
+	 * Example: http://user:base64:cGFzc3dvcmQ=@repository.example.com/path#id
+	 *
+	 * <p>
+	 * In case of multiple repositories with the same ID the first repository in
+	 * order is used. Following repositories with the same ID are ignored.
+	 * Repositories of user parameters are handled at first.
+	 *
+	 * <p>
+	 * Repository layout and proxy cannot be set via user argument.
+	 *
+	 * <p>
+	 * Default: none
+	 */
+	@NonFinal
+	@Nullable
+	@Parameter(property = "repositories")
+	private List<String> repositories = null;
+
+	/**
+	 * Ignore system repositories
+	 *
+	 * <p>
+	 * Default: false
+	 */
+	@NonFinal
+	@Parameter(property = "ignoreSystemRepositories")
+	private boolean ignoreSystemRepositories = false;
 
 	/**
 	 * Working Directory for the to-be-executed application

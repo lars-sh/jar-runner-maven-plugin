@@ -276,9 +276,9 @@ public class Parameters {
 	 * @param repositorySystem         Aether Repository System
 	 * @param repositorySystemSession  Aether Repository System Session
 	 * @param artifact                 Artifact
-	 * @param classPathFormat          Class Path Format
 	 * @param mainClass                Main Class
 	 * @param arguments                Arguments
+	 * @param classPathFormat          Class Path Format
 	 * @param javaPath                 Java Path
 	 * @param javaOptions              Java Options
 	 * @param repositories             List of Repositories
@@ -302,9 +302,9 @@ public class Parameters {
 		this.repositorySystem = repositorySystem;
 		this.repositorySystemSession = repositorySystemSession;
 		this.artifact = new DefaultArtifact(artifact);
-		this.classPathFormat = Optionals.ofNonBlank(classPathFormat);
 		this.mainClass = Optionals.ofNonBlank(mainClass);
 		this.arguments = arguments == null ? emptyList() : unmodifiableList(new ArrayList<>(arguments));
+		this.classPathFormat = Optionals.ofNonBlank(classPathFormat);
 		this.javaPath = Optionals.ofNonBlank(javaPath).map(Paths::get);
 		this.javaOptions = javaOptions == null ? emptyList() : unmodifiableList(new ArrayList<>(javaOptions));
 		this.repositories = getRepositories(repositories);
