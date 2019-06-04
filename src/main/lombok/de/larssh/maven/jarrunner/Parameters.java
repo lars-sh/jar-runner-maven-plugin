@@ -255,6 +255,20 @@ public class Parameters {
 	RepositorySystemSession repositorySystemSession;
 
 	/**
+	 * Start application asynchronous
+	 *
+	 * <p>
+	 * If this argument equals "true" the JAR Runner instance stops right after
+	 * starting the application. The applications stream will not be inherited.
+	 *
+	 * <p>
+	 * Default: false
+	 *
+	 * @return {@code true} is the application shall be started asynchronously
+	 */
+	boolean startAsync;
+
+	/**
 	 * Working Directory for the to-be-executed application
 	 *
 	 * <p>
@@ -278,6 +292,7 @@ public class Parameters {
 	 * @param artifact                 Artifact
 	 * @param mainClass                Main Class
 	 * @param arguments                Arguments
+	 * @param startAsync               Start application asynchronous
 	 * @param classPathFormat          Class Path Format
 	 * @param javaPath                 Java Path
 	 * @param javaOptions              Java Options
@@ -292,6 +307,7 @@ public class Parameters {
 			@Nullable final String artifact,
 			@Nullable final String mainClass,
 			@Nullable final List<String> arguments,
+			final boolean startAsync,
 			@Nullable final String classPathFormat,
 			@Nullable final String javaPath,
 			@Nullable final List<String> javaOptions,
@@ -304,6 +320,7 @@ public class Parameters {
 		this.artifact = new DefaultArtifact(artifact);
 		this.mainClass = Optionals.ofNonBlank(mainClass);
 		this.arguments = arguments == null ? emptyList() : unmodifiableList(new ArrayList<>(arguments));
+		this.startAsync = startAsync;
 		this.classPathFormat = Optionals.ofNonBlank(classPathFormat);
 		this.javaPath = Optionals.ofNonBlank(javaPath).map(Paths::get);
 		this.javaOptions = javaOptions == null ? emptyList() : unmodifiableList(new ArrayList<>(javaOptions));

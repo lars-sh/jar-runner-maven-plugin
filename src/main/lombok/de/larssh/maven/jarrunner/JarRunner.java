@@ -85,13 +85,17 @@ public class JarRunner {
 		commands.addAll(getParameters().getArguments());
 
 		// Build Java process
-		final ProcessBuilder builder = new ProcessBuilder(commands.toArray(new String[0])).inheritIO();
+		final ProcessBuilder builder = new ProcessBuilder(commands.toArray(new String[0]));
 		getParameters().getWorkingDirectory().map(Path::toFile).ifPresent(builder::directory);
 
-		// Execute Java process and handle exit value
-		final int exitValue = waitForWithoutInterrupting(builder.start());
-		if (exitValue != 0) {
-			throw new MojoFailureException(Strings.format("Application stopped with exit value %d.", exitValue));
+		// Execute Java process
+		if (getParameters().isStartAsync()) {
+			builder.start();
+		} else {
+			final int exitValue = waitForWithoutInterrupting(builder.inheritIO().start());
+			if (exitValue != 0) {
+				throw new MojoFailureException(Strings.format("Application stopped with exit value %d.", exitValue));
+			}
 		}
 	}
 

@@ -88,6 +88,20 @@ public class RunMojo extends AbstractMojo {
 	private List<String> arguments = null;
 
 	/**
+	 * Start application asynchronous
+	 *
+	 * <p>
+	 * If this argument equals "true" the JAR Runner instance stops right after
+	 * starting the application. The applications streams will not be inherited.
+	 *
+	 * <p>
+	 * Default: false
+	 */
+	@NonFinal
+	@Parameter(property = "startAsync")
+	boolean startAsync = false;
+
+	/**
 	 * Formatter value that allows modifying the class path. Substring "%s" is
 	 * replaced with the generated class path.
 	 *
@@ -185,6 +199,7 @@ public class RunMojo extends AbstractMojo {
 					artifact,
 					mainClass,
 					arguments,
+					startAsync,
 					classPathFormat,
 					javaPath,
 					javaOptions,
