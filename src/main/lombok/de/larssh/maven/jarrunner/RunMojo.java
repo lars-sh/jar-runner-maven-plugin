@@ -88,7 +88,7 @@ public class RunMojo extends AbstractMojo {
 	private List<String> arguments = null;
 
 	/**
-	 * Start application asynchronous
+	 * Run application asynchronously
 	 *
 	 * <p>
 	 * If this argument equals "true" the JAR Runner instance stops right after
@@ -98,8 +98,8 @@ public class RunMojo extends AbstractMojo {
 	 * Default: false
 	 */
 	@NonFinal
-	@Parameter(property = "startAsync")
-	boolean startAsync = false;
+	@Parameter(property = "runAsync")
+	boolean runAsync = false;
 
 	/**
 	 * Formatter value that allows modifying the class path. Substring "%s" is
@@ -199,7 +199,7 @@ public class RunMojo extends AbstractMojo {
 					artifact,
 					mainClass,
 					arguments,
-					startAsync,
+					runAsync,
 					classPathFormat,
 					javaPath,
 					javaOptions,

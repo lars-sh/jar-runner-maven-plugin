@@ -89,7 +89,7 @@ public class JarRunner {
 		getParameters().getWorkingDirectory().map(Path::toFile).ifPresent(builder::directory);
 
 		// Execute Java process
-		if (getParameters().isStartAsync()) {
+		if (getParameters().isRunAsync()) {
 			builder.start();
 		} else {
 			final int exitValue = waitForWithoutInterrupting(builder.inheritIO().start());

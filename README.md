@@ -18,6 +18,11 @@ The returned exit code is handled by Maven. In case of success it's zero, in cas
 
 	mvn --quiet de.lars-sh:jar-runner-maven-plugin:run -Dartifact=com.puppycrawl.tools:checkstyle:LATEST -DmainClass=com.puppycrawl.tools.checkstyle.Main
 
+### Run asynchronously
+Coming back to the first example you may wonder why the command line stopped working until the SpotBugs window were closed. To handle these cases you can set the `runAsync` argumentto `true`.
+
+	mvn --quiet de.lars-sh:jar-runner-maven-plugin:run -Dartifact=com.github.spotbugs:spotbugs:LATEST -DrunAsync=true
+
 ### Even further
 There are more arguments available. Just checkout the `help` goal as shown below.
 
