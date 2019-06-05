@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.5/jar)
 
 * Add user argument `runAsync` to start application detached
+* Change exit code handling, now inheriting the applications exit code
 
 <a name="0.9.4"></a>
 

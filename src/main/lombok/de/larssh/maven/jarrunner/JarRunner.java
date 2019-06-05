@@ -92,9 +92,9 @@ public class JarRunner {
 		if (getParameters().isRunAsync()) {
 			builder.start();
 		} else {
-			final int exitValue = waitForWithoutInterrupting(builder.inheritIO().start());
-			if (exitValue != 0) {
-				throw new MojoFailureException(Strings.format("Application stopped with exit value %d.", exitValue));
+			final int exitStatus = waitForWithoutInterrupting(builder.inheritIO().start());
+			if (exitStatus != 0) {
+				System.exit(exitStatus);
 			}
 		}
 	}

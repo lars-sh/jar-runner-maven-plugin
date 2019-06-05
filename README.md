@@ -14,7 +14,7 @@ For sure you can go even further and apply a custom main class and arguments.
 	mvn --quiet de.lars-sh:jar-runner-maven-plugin:run -Dartifact=com.puppycrawl.tools:checkstyle:LATEST -DmainClass=com.puppycrawl.tools.checkstyle.Main -Darguments=-v
 
 ### Exit code
-The returned exit code is handled by Maven. In case of success it's zero, in case of error it's non-zero, noting the original exit value as text output. Checkout the following example and proove it using either `echo $?` (Unix systems) or `echo %ERRORLEVEL%` (Windows systems).
+The returned exit code is inherited. In case of success it's zero, in case of error it's non-zero. Checkout the following example and proove it using either `echo $?` (Unix systems) or `echo %ERRORLEVEL%` (Windows systems).
 
 	mvn --quiet de.lars-sh:jar-runner-maven-plugin:run -Dartifact=com.puppycrawl.tools:checkstyle:LATEST -DmainClass=com.puppycrawl.tools.checkstyle.Main
 
