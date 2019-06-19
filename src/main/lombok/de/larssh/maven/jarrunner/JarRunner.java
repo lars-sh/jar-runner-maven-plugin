@@ -79,7 +79,7 @@ public class JarRunner {
 
 		// Build Java execution command
 		final List<String> commands = new ArrayList<>();
-		commands.add(getJavaExecutable());
+		commands.add(getJavaExecutable().toString());
 		commands.addAll(getParameters().getJavaOptions());
 		commands.add("-classpath");
 		commands.add(getClassPath(dependencyResult));
@@ -119,15 +119,8 @@ public class JarRunner {
 	 *
 	 * @return path to Java executable
 	 */
-	private String getJavaExecutable() {
-		// by Argument
-		final Optional<Path> javaPath = getParameters().getJavaPath();
-		if (javaPath.isPresent()) {
-			return javaPath.get().toString();
-		}
-
-		// by Property
-		return SystemUtils.getJavaExecutable().toString();
+	private Path getJavaExecutable() {
+		return getParameters().getJavaPath().orElseGet(SystemUtils::getJavaExecutable);
 	}
 
 	/**
