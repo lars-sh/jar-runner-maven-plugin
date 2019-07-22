@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>jar-runner-maven-plugin</artifactId>
-	<version>0.9.5-SNAPSHOT</version>
+	<version>0.9.5</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>JAR Runner Maven Plugin</name>
