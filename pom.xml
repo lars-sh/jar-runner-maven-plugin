@@ -48,10 +48,6 @@
 		<url>https://travis-ci.org/lars-sh/jar-runner-maven-plugin</url>
 	</ciManagement>
 
-	<properties>
-		<spotbugs.excludeFilterFile>${project.basedir}/spotbugs-excludes.xml</spotbugs.excludeFilterFile>
-	</properties>
-
 	<dependencies>
 		<!-- Provided -->
 		<dependency>
