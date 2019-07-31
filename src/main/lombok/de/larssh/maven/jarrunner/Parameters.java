@@ -1,6 +1,5 @@
 package de.larssh.maven.jarrunner;
 
-import static de.larssh.utils.Finals.constant;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -43,12 +42,12 @@ public class Parameters {
 	/**
 	 * Format for repository IDs of user argument repositories without ID.
 	 */
-	private static final String REPOSITORY_ID_FORMAT_DEFAULT = constant("argument-%d");
+	private static final String REPOSITORY_ID_FORMAT_DEFAULT = "argument-%d";
 
 	/**
 	 * Layout of user argument repositories
 	 */
-	private static final String REPOSITORY_LAYOUT_DEFAULT = constant("default");
+	private static final String REPOSITORY_LAYOUT_DEFAULT = "default";
 
 	/**
 	 * Pattern of the user info part of user argument repository URIs
