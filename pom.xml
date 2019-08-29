@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>org.apache.maven.resolver</groupId>
 			<artifactId>maven-resolver-api</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.apache.maven.resolver</groupId>
 			<artifactId>maven-resolver-util</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 		</dependency>
 	</dependencies>
 
