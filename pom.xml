@@ -46,7 +46,7 @@
 	</issueManagement>
 	<ciManagement>
 		<system>Travis</system>
-		<url>https://travis-ci.org/lars-sh/jar-runner-maven-plugin</url>
+		<url>https://travis-ci.com/lars-sh/jar-runner-maven-plugin</url>
 	</ciManagement>
 
 	<dependencies>
