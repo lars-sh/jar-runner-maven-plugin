@@ -38,6 +38,7 @@ import lombok.RequiredArgsConstructor;
  * of {@link RunMojo}.
  */
 @Getter
+@SuppressWarnings("PMD.DataClass")
 public class Parameters {
 	/**
 	 * Format for repository IDs of user argument repositories without ID.
