@@ -228,7 +228,8 @@ public class JarRunner {
 	private int waitForWithoutInterrupting(final Process process) {
 		try {
 			return process.waitFor();
-		} catch (final InterruptedException e) {
+		} catch (@SuppressWarnings("unused") final InterruptedException e) {
+			process.destroy();
 			return waitForWithoutInterrupting(process);
 		}
 	}
