@@ -1,7 +1,5 @@
 package de.larssh.maven.jarrunner;
 
-import java.util.List;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -85,7 +83,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "arguments")
-	private List<String> arguments = null;
+	private String arguments = null;
 
 	/**
 	 * Run application asynchronously
@@ -133,7 +131,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "javaOptions")
-	private List<String> javaOptions = null;
+	private String javaOptions = null;
 
 	/**
 	 * List of Maven repository URLs
@@ -160,7 +158,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "repositories")
-	private List<String> repositories = null;
+	private String repositories = null;
 
 	/**
 	 * Ignore system repositories

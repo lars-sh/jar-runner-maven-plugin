@@ -1,6 +1,5 @@
 package de.larssh.maven.jarrunner;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 import java.net.URI;
@@ -51,6 +50,12 @@ public class Parameters {
 	private static final String REPOSITORY_LAYOUT_DEFAULT = "default";
 
 	/**
+	 * Pattern to parse arguments as list
+	 */
+	private static final Pattern PARSE_ARGUMENT_LIST_PATTERN
+			= Pattern.compile("(?<value>\\[,\\])|(?<separator>\\],\\[|,)");
+
+	/**
 	 * Pattern of the user info part of user argument repository URIs
 	 */
 	private static final Pattern REPOSITORY_USER_INFO_PATTERN
@@ -63,11 +68,7 @@ public class Parameters {
 	 * @param uris list of repository URI strings
 	 * @return list of repositories
 	 */
-	private static List<RemoteRepository> getRepositories(@Nullable final List<String> uris) {
-		if (uris == null) {
-			return emptyList();
-		}
-
+	private static List<RemoteRepository> getRepositories(final List<String> uris) {
 		final List<RemoteRepository> repositories = new ArrayList<>(uris.size());
 		final int size = uris.size();
 		for (int index = 0; index < size; index += 1) {
@@ -134,6 +135,45 @@ public class Parameters {
 		final String password
 				= RepositoryPasswordConverter.convert(matcher.group("converter"), matcher.group("password"));
 		return new AuthenticationBuilder().addUsername(userName).addPassword(password).build();
+	}
+
+	/**
+	 * Parses {@code argument} into a list of arguments. The character sequences
+	 * {@code ,} and {@code ],[} are used to separate arguments from each other
+	 * while {@code [,]} can be used to represent an actual comma character.
+	 *
+	 * @param argument the argument value to split
+	 * @return a list of splitted arguments
+	 */
+	private static List<String> parseArgumentList(@Nullable final String argument) {
+		final List<String> arguments = new ArrayList<>();
+		if (argument != null) {
+			final Matcher matcher = PARSE_ARGUMENT_LIST_PATTERN.matcher(argument);
+			while (!matcher.hitEnd()) {
+				arguments.add(parseNextArgument(matcher));
+			}
+		}
+		return arguments;
+	}
+
+	/**
+	 * Retrieves the next argument string from {@code matcher}.
+	 *
+	 * @param matcher the matcher to continue reading from
+	 * @return the next argument string
+	 */
+	@SuppressWarnings({ "checkstyle:IllegalInstantiation", "checkstyle:XIllegalTypeCustom" })
+	private static String parseNextArgument(final Matcher matcher) {
+		final StringBuffer buffer = new StringBuffer();
+		while (matcher.find()) {
+			matcher.appendReplacement(buffer, "");
+			if (matcher.group("separator") != null) {
+				return buffer.toString();
+			}
+			buffer.append(',');
+		}
+		matcher.appendTail(buffer);
+		return buffer.toString();
 	}
 
 	/**
@@ -306,12 +346,12 @@ public class Parameters {
 			final RepositorySystemSession repositorySystemSession,
 			@Nullable final String artifact,
 			@Nullable final String mainClass,
-			@Nullable final List<String> arguments,
+			@Nullable final String arguments,
 			final boolean runAsync,
 			@Nullable final String classPathFormat,
 			@Nullable final String javaPath,
-			@Nullable final List<String> javaOptions,
-			@Nullable final List<String> repositories,
+			@Nullable final String javaOptions,
+			@Nullable final String repositories,
 			final boolean ignoreSystemRepositories,
 			@Nullable final String workingDirectory) {
 		this.mavenSession = mavenSession;
@@ -319,12 +359,12 @@ public class Parameters {
 		this.repositorySystemSession = repositorySystemSession;
 		this.artifact = new DefaultArtifact(artifact);
 		this.mainClass = Optionals.ofNonBlank(mainClass);
-		this.arguments = arguments == null ? emptyList() : unmodifiableList(new ArrayList<>(arguments));
+		this.arguments = unmodifiableList(parseArgumentList(arguments));
 		this.runAsync = runAsync;
 		this.classPathFormat = Optionals.ofNonBlank(classPathFormat);
 		this.javaPath = Optionals.ofNonBlank(javaPath).map(Paths::get);
-		this.javaOptions = javaOptions == null ? emptyList() : unmodifiableList(new ArrayList<>(javaOptions));
-		this.repositories = getRepositories(repositories);
+		this.javaOptions = unmodifiableList(parseArgumentList(javaOptions));
+		this.repositories = getRepositories(parseArgumentList(repositories));
 		this.ignoreSystemRepositories = ignoreSystemRepositories;
 		this.workingDirectory = Optionals.ofNonBlank(workingDirectory).map(Paths::get);
 	}

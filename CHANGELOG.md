@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.6/jar)
 
-* TODO
+* `,` and `],[` can be used to separate multiple arguments from each other. Instead `[,]` can be used to represent an actual comma character. Before arguments inside lists were not able to contain comma characters.
 
 <a name="0.9.5"></a>
 
