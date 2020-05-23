@@ -1,6 +1,8 @@
 # JAR Runner Maven Plugin
 This is a Maven plugin to execute JAR artifacts from command line. Apache Maven manages a project's build, reporting and documentation using a project object model (POM). But it's lacking support for executing artifacts from command line using a single line of code. The JAR Runner Maven Plugin aims at changing that.
 
+[Changelog](CHANGELOG.md)  |  [JavaDoc](https://lars-sh.github.io/jar-runner-maven-plugin/apidocs)  |  [Generated Reports](https://lars-sh.github.io/jar-runner-maven-plugin/project-reports.html)
+
 ## Getting started
 All you require to launch Maven artifacts is Maven itself - no POM. Then go ahead with the below example.
 
