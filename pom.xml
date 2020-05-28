@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.lars-sh</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.9.7</version>
+		<version>0.9.8-SNAPSHOT</version>
 		<relativePath></relativePath>
 	</parent>
 
@@ -15,7 +15,7 @@
 
 	<name>JAR Runner Maven Plugin</name>
 	<description>This is a Maven plugin to execute JAR artifacts from command line. Apache Maven manages a project's build, reporting and documentation using a project object model (POM). But it's lacking support for executing artifacts from command line using a single line of code. The JAR Runner Maven Plugin aims at changing that.</description>
-	<url>https://lars-sh.github.io/jar-runner-maven-plugin/</url>
+	<url>https://${parent-pom.github.organization}.github.io/${parent-pom.github.project}/</url>
 	<licenses>
 		<license>
 			<name>MIT License</name>
@@ -36,17 +36,17 @@
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:git@github.com:lars-sh/jar-runner-maven-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com:lars-sh/jar-runner-maven-plugin.git</developerConnection>
-		<url>https://github.com/lars-sh/jar-runner-maven-plugin</url>
+		<connection>scm:git:git@github.com:${parent-pom.github.organization}/${parent-pom.github.project}.git</connection>
+		<developerConnection>scm:git:git@github.com:${parent-pom.github.organization}/${parent-pom.github.project}.git</developerConnection>
+		<url>https://github.com/${parent-pom.github.organization}/${parent-pom.github.project}</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/lars-sh/jar-runner-maven-plugin/issues</url>
+		<url>https://github.com/${parent-pom.github.organization}/${parent-pom.github.project}/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>Travis</system>
-		<url>https://travis-ci.com/lars-sh/jar-runner-maven-plugin</url>
+		<url>https://travis-ci.com/${parent-pom.github.organization}/${parent-pom.github.project}</url>
 	</ciManagement>
 
 	<dependencies>
@@ -98,13 +98,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-plugin-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>
