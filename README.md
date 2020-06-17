@@ -1,4 +1,6 @@
 # JAR Runner Maven Plugin
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flars-sh%2Fjar-runner-maven-plugin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flars-sh%2Fjar-runner-maven-plugin?ref=badge_shield)
+
 This is a Maven plugin to execute JAR artifacts from command line. Apache Maven manages a project's build, reporting and documentation using a project object model (POM). But it's lacking support for executing artifacts from command line using a single line of code. The JAR Runner Maven Plugin aims at changing that.
 
 [Changelog](CHANGELOG.md)  |  [Plugin Documentation](https://lars-sh.github.io/jar-runner-maven-plugin/plugin-info.html)
@@ -34,3 +36,6 @@ The applications exit code is inherited. In case of success it should be zero, i
 There are more arguments available. Just checkout the `help` goal as shown below.
 
 	mvn de.lars-sh:jar-runner-maven-plugin:help -Dgoal=run -Ddetail=true
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flars-sh%2Fjar-runner-maven-plugin.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flars-sh%2Fjar-runner-maven-plugin?ref=badge_large)
