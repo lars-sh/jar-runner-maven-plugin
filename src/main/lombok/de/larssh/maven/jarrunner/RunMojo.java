@@ -37,7 +37,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(defaultValue = "${session}", readonly = true)
-	private MavenSession mavenSession = null;
+	MavenSession mavenSession = null;
 
 	/**
 	 * Aether Repository System
@@ -45,7 +45,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Component
-	private RepositorySystem repositorySystem = null;
+	RepositorySystem repositorySystem = null;
 
 	/**
 	 * Aether Repository System Session
@@ -53,7 +53,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
-	private RepositorySystemSession repositorySystemSession = null;
+	RepositorySystemSession repositorySystemSession = null;
 
 	/**
 	 * Artifact to load
@@ -61,7 +61,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "artifact", required = true)
-	private String artifact = null;
+	String artifact = null;
 
 	/**
 	 * Main class to execute
@@ -72,7 +72,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "mainClass")
-	private String mainClass = null;
+	String mainClass = null;
 
 	/**
 	 * List of arguments for the to-be-executed application
@@ -83,7 +83,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "arguments")
-	private String arguments = null;
+	String arguments = null;
 
 	/**
 	 * Run application asynchronously
@@ -109,7 +109,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "classPathFormat")
-	private String classPathFormat = null;
+	String classPathFormat = null;
 
 	/**
 	 * Path to the Java executable
@@ -120,7 +120,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "javaPath")
-	private String javaPath = null;
+	String javaPath = null;
 
 	/**
 	 * List of options for the Java VM
@@ -131,7 +131,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "javaOptions")
-	private String javaOptions = null;
+	String javaOptions = null;
 
 	/**
 	 * List of Maven repository URLs
@@ -158,7 +158,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "repositories")
-	private String repositories = null;
+	String repositories = null;
 
 	/**
 	 * Ignore system repositories
@@ -168,7 +168,7 @@ public class RunMojo extends AbstractMojo {
 	 */
 	@NonFinal
 	@Parameter(property = "ignoreSystemRepositories")
-	private boolean ignoreSystemRepositories = false;
+	boolean ignoreSystemRepositories = false;
 
 	/**
 	 * Working Directory for the to-be-executed application
@@ -179,7 +179,7 @@ public class RunMojo extends AbstractMojo {
 	@NonFinal
 	@Nullable
 	@Parameter(property = "workingDirectory")
-	private String workingDirectory = null;
+	String workingDirectory = null;
 
 	/** {@inheritDoc} */
 	@Override
