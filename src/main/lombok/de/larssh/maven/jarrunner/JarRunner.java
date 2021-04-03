@@ -70,7 +70,7 @@ public class JarRunner {
 	 *                                       started application stopped with an
 	 *                                       exit value not equal to zero
 	 */
-	@SuppressWarnings("PMD.DoNotCallSystemExit")
+	@SuppressWarnings("PMD.DoNotTerminateVM")
 	@SuppressFBWarnings(value = { "COMMAND_INJECTION", "DM_EXIT" },
 			justification = "command is meant to be injected and exit code need to be passed")
 	public void run() throws DependencyResolutionException, IOException, MojoFailureException {
