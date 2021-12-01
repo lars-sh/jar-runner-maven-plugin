@@ -401,13 +401,12 @@ public class Parameters {
 		 * @return plain password
 		 */
 		@Nullable
-		@SuppressFBWarnings(value = "IMPROPER_UNICODE", justification = "Converter names are expected to be ASCII.")
 		public static String convert(@Nullable final String converterName, @Nullable final String password) {
 			if (Strings.isBlank(password)) {
 				return null;
 			}
 			for (final RepositoryPasswordConverter converter : values()) {
-				if (converter.name().equalsIgnoreCase(converterName)) {
+				if (Strings.equalsIgnoreCaseAscii(converter.name(), converterName)) {
 					return converter.getConverter().apply(password);
 				}
 			}
