@@ -44,3 +44,10 @@ There are more arguments available. Just checkout the `help` goal as shown below
 ```Shell
 mvn de.lars-sh:jar-runner-maven-plugin:help -Dgoal=run -Ddetail=true
 ```
+
+### Debugging Applications
+In some cases it is useful to debug an application executed in a more production-alike runtime environment than in an IDE. Adding the following argument to a JAR Runner Maven Plugin command will open the port 8000 for remote debugging with any of the usual IDEs.
+
+```Shell
+-DjavaOptions=-agentlib:jdwp=transport=dt_socket[,]server=y[,]suspend=y[,]address=8000
+```
