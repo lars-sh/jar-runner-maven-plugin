@@ -341,6 +341,8 @@ public class Parameters {
 	 * @param workingDirectory         Working Directory
 	 */
 	@SuppressWarnings({ "checkstyle:ParameterNumber", "PMD.ExcessiveParameterList" })
+	@SuppressFBWarnings(value = "EI_EXPOSE_REP2",
+			justification = "the Maven session is stored for a single plugin run only")
 	public Parameters(final MavenSession mavenSession,
 			final RepositorySystem repositorySystem,
 			final RepositorySystemSession repositorySystemSession,
