@@ -191,7 +191,7 @@ public class RunMojo extends AbstractMojo {
 			justification = "catching any exception at execution root")
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
-			new JarRunner(new Parameters(Nullables.orElseThrow(mavenSession),
+			final JarRunner jarRunner = new JarRunner(new Parameters(Nullables.orElseThrow(mavenSession),
 					Nullables.orElseThrow(repositorySystem),
 					Nullables.orElseThrow(repositorySystemSession),
 					artifact,
@@ -203,11 +203,38 @@ public class RunMojo extends AbstractMojo {
 					javaOptions,
 					repositories,
 					ignoreSystemRepositories,
-					workingDirectory)).run();
+					workingDirectory));
+
+			if (getLog().isInfoEnabled()) {
+				getLog().info("Command: " + jarRunner.getCommandLine());
+			}
+
+			jarRunner.execute();
 		} catch (final MojoFailureException e) {
 			throw e;
 		} catch (final Exception e) {
 			throw new MojoExecutionException("Unexpected exception thrown.", e);
 		}
+	}
+
+	/**
+	 * This dummy method forces IDE automatisms to keep fields non-final.
+	 */
+	@SuppressWarnings({ "PMD.NullAssignment", "PMD.UnusedPrivateMethod" })
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "dummy method")
+	private void nonFinalDummy() {
+		mavenSession = null;
+		repositorySystem = null;
+		repositorySystemSession = null;
+		artifact = null;
+		mainClass = null;
+		arguments = null;
+		runAsync = false;
+		classPathFormat = null;
+		javaPath = null;
+		javaOptions = null;
+		repositories = null;
+		ignoreSystemRepositories = false;
+		workingDirectory = null;
 	}
 }
