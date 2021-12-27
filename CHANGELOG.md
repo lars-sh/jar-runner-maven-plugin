@@ -1,9 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="0.9.7"></a>
+
+## [0.9.7-SNAPSHOT](https://github.com/lars-sh/jar-runner-maven-plugin/compare/a24df52e7d034267d6059f5cfe324a0365184d6f...master)
+
+Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.7/jar)
+
+* TODO
+
 <a name="0.9.6"></a>
 
-## [0.9.6-SNAPSHOT](https://github.com/lars-sh/jar-runner-maven-plugin/compare/570557e457bdc5bead85ff7c0df4d1de676a24e4...master)
+## [0.9.6](https://github.com/lars-sh/jar-runner-maven-plugin/compare/8d8ce3fda280a6abeee3035edc74829ecc521113...a24df52e7d034267d6059f5cfe324a0365184d6f) (2021-12-27)
 
 Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.6/jar)
 
