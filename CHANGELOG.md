@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 <a name="0.9.6"></a>
 
-## [0.9.6-SNAPSHOT](https://github.com/lars-sh/jar-runner-maven-plugin/compare/570557e457bdc5bead85ff7c0df4d1de676a24e4...master)
+## [0.9.6](https://github.com/lars-sh/jar-runner-maven-plugin/compare/570557e457bdc5bead85ff7c0df4d1de676a24e4...master)
 
 Download at [Maven Search](https://search.maven.org/artifact/de.lars-sh/jar-runner-maven-plugin/0.9.6/jar)
 
