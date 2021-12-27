@@ -26,118 +26,64 @@ import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 
 import de.larssh.utils.SystemUtils;
+import de.larssh.utils.io.ProcessBuilders;
 import de.larssh.utils.maven.AetherUtils;
 import de.larssh.utils.maven.DependencyScope;
 import de.larssh.utils.text.Strings;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Launches a new JVM based on a given artifact with optional arguments.
  *
  * <p>
  * This is the implementation for {@link RunMojo}. The work is done by
- * {@link #run()}.
+ * {@link #execute()}.
  */
 @Getter
-@RequiredArgsConstructor
+@SuppressWarnings("PMD.ExcessiveImports")
 public class JarRunner {
-	/**
-	 * Parameters object maintaining the injected system objects and user arguments
-	 * of {@link RunMojo}
-	 *
-	 * @return parameters
-	 */
-	Parameters parameters;
-
-	/**
-	 * Launches a new JVM based on a given artifact with optional arguments.
-	 *
-	 * <p>
-	 * The given artifacts dependencies are resolved and a fully qualified class
-	 * path is created.
-	 *
-	 * <p>
-	 * The main class to execute can either be specified by argument or is taken
-	 * from the artifacts JAR.
-	 *
-	 * @throws DependencyResolutionException if resolving dependencies failed
-	 * @throws IOException                   if any IO failure occurred
-	 * @throws MojoFailureException          either if no main class is given and
-	 *                                       the artifacts JAR does not contain a
-	 *                                       main class in its manifest or the
-	 *                                       started application stopped with an
-	 *                                       exit value not equal to zero
-	 */
-	@SuppressWarnings("PMD.DoNotTerminateVM")
-	@SuppressFBWarnings(value = { "COMMAND_INJECTION", "DM_EXIT" },
-			justification = "command is meant to be injected and exit code need to be passed")
-	public void run() throws DependencyResolutionException, IOException, MojoFailureException {
-		// Resolve Dependencies
-		final DependencyResult dependencyResult = resolveDependencies();
-
-		// Build Java execution command
-		final List<String> commands = new ArrayList<>();
-		commands.add(getJavaExecutable().toString());
-		commands.addAll(getParameters().getJavaOptions());
-		commands.add("-classpath");
-		commands.add(getClassPath(dependencyResult));
-		commands.add(getMainClass(dependencyResult));
-		commands.addAll(getParameters().getArguments());
-
-		// Build Java process
-		final ProcessBuilder builder = new ProcessBuilder(commands.toArray(new String[0]));
-		getParameters().getWorkingDirectory().map(Path::toFile).ifPresent(builder::directory);
-
-		// Execute Java process
-		if (getParameters().isRunAsync()) {
-			builder.start();
-		} else {
-			final int exitStatus = waitForWithoutInterrupting(builder.inheritIO().start());
-			if (exitStatus != 0) {
-				System.exit(exitStatus);
-			}
-		}
-	}
-
 	/**
 	 * Combines the class paths of {@code dependencyResult} with the optional class
 	 * path format user argument.
 	 *
 	 * @param dependencyResult Resolved dependencies
+	 * @param classPathFormat  formatter value allowing modifying the class path
 	 * @return class path string
 	 */
-	private String getClassPath(final DependencyResult dependencyResult) {
+	private static String getClassPath(final DependencyResult dependencyResult,
+			final Optional<String> classPathFormat) {
 		final String classPath = AetherUtils.getClassPath(dependencyResult);
-		return getParameters().getClassPathFormat().map(format -> String.format(format, classPath)).orElse(classPath);
+		return classPathFormat.map(format -> String.format(format, classPath)).orElse(classPath);
 	}
 
 	/**
 	 * Determines the path to a Java executable by either user argument or current
 	 * JVM instance.
 	 *
+	 * @param javaPath the path to the Java executable
 	 * @return path to Java executable
 	 */
-	private Path getJavaExecutable() {
-		return getParameters().getJavaPath().orElseGet(SystemUtils::getJavaExecutable);
+	private static Path getJavaExecutable(final Optional<Path> javaPath) {
+		return javaPath.orElseGet(SystemUtils::getJavaExecutable);
 	}
 
 	/**
 	 * Determines the main class to call by either user argument or artifacts JAR
 	 * manifest.
 	 *
-	 * @param dependencyResult Resolved dependencies
+	 * @param mainClassParameter the main class to execute as per user input
+	 * @param dependencyResult   Resolved dependencies
 	 * @return main class to call
 	 * @throws IOException          if any IO failure occurred
 	 * @throws MojoFailureException if no main class is given and the artifacts JAR
 	 *                              does not contain a main class in its manifest
 	 */
-	private String getMainClass(final DependencyResult dependencyResult) throws IOException, MojoFailureException {
+	private static String getMainClass(final Optional<String> mainClassParameter,
+			final DependencyResult dependencyResult) throws IOException, MojoFailureException {
 		// by Argument
-		final Optional<String> optionalMainClass = getParameters().getMainClass();
-		if (optionalMainClass.isPresent()) {
-			return optionalMainClass.get();
+		if (mainClassParameter.isPresent()) {
+			return mainClassParameter.get();
 		}
 
 		// by Manifest
@@ -169,25 +115,26 @@ public class JarRunner {
 	 * order is used. Following repositories with the same ID are ignored.
 	 * Repositories of user parameters are handled at first.
 	 *
+	 * @param parameters the parameters object of {@link RunMojo}
 	 * @return list of repositories
 	 */
 	@SuppressFBWarnings(value = "PSC_PRESIZE_COLLECTIONS",
 			justification = "presizing collections is not worth it in this place")
-	private List<RemoteRepository> getRepositories() {
+	private static List<RemoteRepository> getRepositories(final Parameters parameters) {
 		final Set<String> idsForExistanceCheck = new HashSet<>();
 
 		// via Parameter
 		final List<RemoteRepository> repositories = new ArrayList<>();
-		for (final RemoteRepository repository : getParameters().getRepositories()) {
+		for (final RemoteRepository repository : parameters.getRepositories()) {
 			if (idsForExistanceCheck.add(repository.getId())) {
 				repositories.add(repository);
 			}
 		}
 
 		// via System
-		if (!getParameters().isIgnoreSystemRepositories()) {
+		if (!parameters.isIgnoreSystemRepositories()) {
 			final List<RemoteRepository> systemRepositories
-					= AetherUtils.getRemoteRepositories(getParameters().getMavenSession());
+					= AetherUtils.getRemoteRepositories(parameters.getMavenSession());
 			for (final RemoteRepository repository : systemRepositories) {
 				if (idsForExistanceCheck.add(repository.getId())) {
 					repositories.add(repository);
@@ -201,18 +148,20 @@ public class JarRunner {
 	/**
 	 * Resolves the dependencies for the artifact given by user argument.
 	 *
+	 * @param parameters the parameters object of {@link RunMojo}
 	 * @return the resolved dependencies
 	 * @throws DependencyResolutionException if resolving dependencies failed
 	 */
-	private DependencyResult resolveDependencies() throws DependencyResolutionException {
-		final Dependency dependency = new Dependency(getParameters().getArtifact(), DependencyScope.COMPILE.getValue());
-		final CollectRequest collectRequest = new CollectRequest(dependency, getRepositories());
+	private static DependencyResult resolveDependencies(final Parameters parameters)
+			throws DependencyResolutionException {
+		final Dependency dependency = new Dependency(parameters.getArtifact(), DependencyScope.COMPILE.getValue());
+		final CollectRequest collectRequest = new CollectRequest(dependency, getRepositories(parameters));
 		final Collection<String> includedScopes
 				= asList(DependencyScope.COMPILE.getValue(), DependencyScope.RUNTIME.getValue());
 		final DependencyRequest dependencyRequest
 				= new DependencyRequest(collectRequest, new ScopeDependencyFilter(includedScopes, null));
-		return getParameters().getRepositorySystem()
-				.resolveDependencies(getParameters().getRepositorySystemSession(), dependencyRequest);
+		return parameters.getRepositorySystem()
+				.resolveDependencies(parameters.getRepositorySystemSession(), dependencyRequest);
 	}
 
 	/**
@@ -225,12 +174,102 @@ public class JarRunner {
 	 * @return exit value of {@code process} (By convention, the value 0 indicates
 	 *         normal termination.)
 	 */
-	private int waitForWithoutInterrupting(final Process process) {
+	private static int waitForWithoutInterrupting(final Process process) {
 		try {
 			return process.waitFor();
 		} catch (@SuppressWarnings("unused") final InterruptedException e) {
 			process.destroy();
 			return waitForWithoutInterrupting(process);
 		}
+	}
+
+	/**
+	 * Parameters object maintaining the injected system objects and user arguments
+	 * of {@link RunMojo}
+	 *
+	 * @return parameters
+	 */
+	Parameters parameters;
+
+	/**
+	 * The command prepared to launch the artifact in a new JVM
+	 *
+	 * @return the process builder
+	 */
+	ProcessBuilder processBuilder;
+
+	/**
+	 * Prepares a command (in form of an internal {@link ProcessBuilder}) to launch
+	 * a new JVM based on a given artifact with optional arguments.
+	 *
+	 * <p>
+	 * The given artifacts dependencies are resolved and a fully qualified class
+	 * path is created.
+	 *
+	 * <p>
+	 * The main class to execute can either be specified by argument or is taken
+	 * from the artifacts JAR.
+	 *
+	 * @param parameters the parameters used to create the command
+	 * @throws DependencyResolutionException if resolving dependencies failed
+	 * @throws IOException                   if any IO failure occurred
+	 * @throws MojoFailureException          either if no main class is given and
+	 *                                       the artifacts JAR does not contain a
+	 *                                       main class in its manifest or the
+	 *                                       started application stopped with an
+	 *                                       exit value not equal to zero
+	 */
+	@SuppressFBWarnings(value = "COMMAND_INJECTION", justification = "command injection expected")
+	public JarRunner(final Parameters parameters)
+			throws DependencyResolutionException, MojoFailureException, IOException {
+		this.parameters = parameters;
+
+		// Resolve Dependencies
+		final DependencyResult dependencyResult = resolveDependencies(parameters);
+
+		// Build Java execution command
+		final List<String> commands = new ArrayList<>();
+		commands.add(getJavaExecutable(parameters.getJavaPath()).toString());
+		commands.addAll(parameters.getJavaOptions());
+		commands.add("-classpath");
+		commands.add(getClassPath(dependencyResult, parameters.getClassPathFormat()));
+		commands.add(getMainClass(parameters.getMainClass(), dependencyResult));
+		commands.addAll(parameters.getArguments());
+
+		// Build Java process
+		processBuilder = new ProcessBuilder(commands);
+		parameters.getWorkingDirectory().map(Path::toFile).ifPresent(processBuilder::directory);
+	}
+
+	/**
+	 * Launches a new JVM based on the instances command.
+	 *
+	 * @throws IOException if any IO failure occurred
+	 */
+	@SuppressWarnings("PMD.DoNotTerminateVM")
+	@SuppressFBWarnings(value = { "COMMAND_INJECTION", "DM_EXIT" },
+			justification = "command is meant to be injected and exit code need to be passed")
+	public void execute() throws IOException {
+		if (getParameters().isRunAsync()) {
+			getProcessBuilder().start();
+		} else {
+			final int exitStatus = waitForWithoutInterrupting(getProcessBuilder().inheritIO().start());
+			if (exitStatus != 0) {
+				System.exit(exitStatus);
+			}
+		}
+	}
+
+	/**
+	 * Returns a command to launch this {@link JarRunner}.
+	 *
+	 * <p>
+	 * The results of this method depend on the Operating System, as command line
+	 * arguments on Unix and Windows are quoted and escaped differently.
+	 *
+	 * @return the escaped command
+	 */
+	public String getCommandLine() {
+		return ProcessBuilders.toCommandLine(getProcessBuilder(), true);
 	}
 }
