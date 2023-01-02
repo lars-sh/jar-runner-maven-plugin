@@ -2,5 +2,5 @@
 <!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionXpathFilter Experimental Configuration 1.2//EN" "https://checkstyle.org/dtds/suppressions_1_2_xpath_experimental.dtd">
 <suppressions>
 	<!-- Suppress anything inside generated HelpMojo -->
-	<suppress files="^.*[/\\]de[/\\]larssh[/\\]maven[/\\]jarrunner[/\\]HelpMojo\.java$" checks="^.*$" />
+	<suppress files="^.*[/\\]de[/\\]lars_sh[/\\]jar_runner_maven_plugin[/\\]HelpMojo\.java$" checks="^.*$" />
 </suppressions>
