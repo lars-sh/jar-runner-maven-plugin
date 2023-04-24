@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarInputStream;
 
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.graph.Dependency;
@@ -24,11 +25,10 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
 
 import de.larssh.utils.SystemUtils;
 import de.larssh.utils.io.ProcessBuilders;
-import de.larssh.utils.maven.AetherUtils;
-import de.larssh.utils.maven.DependencyScope;
 import de.larssh.utils.text.Strings;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
@@ -53,7 +53,9 @@ public class JarRunner {
 	 */
 	private static String getClassPath(final DependencyResult dependencyResult,
 			final Optional<String> classPathFormat) {
-		final String classPath = AetherUtils.getClassPath(dependencyResult);
+		final PreorderNodeListGenerator preorderNodeListGenerator = new PreorderNodeListGenerator();
+		dependencyResult.getRoot().accept(preorderNodeListGenerator);
+		final String classPath = preorderNodeListGenerator.getClassPath();
 		return classPathFormat.map(format -> String.format(format, classPath)).orElse(classPath);
 	}
 
@@ -134,7 +136,7 @@ public class JarRunner {
 		// via System
 		if (!parameters.isIgnoreSystemRepositories()) {
 			final List<RemoteRepository> systemRepositories
-					= AetherUtils.getRemoteRepositories(parameters.getMavenSession());
+					= RepositoryUtils.toRepos(parameters.getMavenSession().getRequest().getRemoteRepositories());
 			for (final RemoteRepository repository : systemRepositories) {
 				if (idsForExistanceCheck.add(repository.getId())) {
 					repositories.add(repository);
@@ -178,6 +180,8 @@ public class JarRunner {
 		try {
 			return process.waitFor();
 		} catch (@SuppressWarnings("unused") final InterruptedException e) {
+			// Instead of rethrowing the InterruptedException we destroy the subprocess and
+			// wait for it to end.
 			process.destroy();
 			return waitForWithoutInterrupting(process);
 		}
