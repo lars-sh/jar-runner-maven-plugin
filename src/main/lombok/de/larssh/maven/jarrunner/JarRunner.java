@@ -176,10 +176,11 @@ public class JarRunner {
 	 * @return exit value of {@code process} (By convention, the value 0 indicates
 	 *         normal termination.)
 	 */
+	@SuppressWarnings("java:S2142")
 	private static int waitForWithoutInterrupting(final Process process) {
 		try {
 			return process.waitFor();
-		} catch (@SuppressWarnings("unused") final InterruptedException e) {
+		} catch (@SuppressWarnings("unused") final InterruptedException ignore) {
 			// Instead of rethrowing the InterruptedException we destroy the subprocess and
 			// wait for it to end.
 			process.destroy();
@@ -262,6 +263,15 @@ public class JarRunner {
 				System.exit(exitStatus);
 			}
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@SuppressWarnings({ "deprecation", "checkstyle:NoFinalizer", "java:S1113" })
+	@SuppressFBWarnings(value = { "BED_BOGUS_EXCEPTION_DECLARATION", "FI_USELESS" },
+			justification = "finalize implemented as final method to avoid finalizer attacks when throwing an exception in the constructor")
+	protected final void finalize() throws Throwable {
+		super.finalize();
 	}
 
 	/**
