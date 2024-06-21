@@ -42,7 +42,7 @@ import lombok.Getter;
  */
 @Getter
 @SuppressWarnings("PMD.ExcessiveImports")
-public class JarRunner {
+public final class JarRunner {
 	/**
 	 * Combines the class paths of {@code dependencyResult} with the optional class
 	 * path format user argument.
@@ -263,15 +263,6 @@ public class JarRunner {
 				System.exit(exitStatus);
 			}
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings({ "deprecation", "checkstyle:NoFinalizer", "java:S1113", "PMD.FinalizeOnlyCallsSuperFinalize" })
-	@SuppressFBWarnings(value = { "BED_BOGUS_EXCEPTION_DECLARATION", "FI_USELESS" },
-			justification = "finalize implemented as final method to avoid finalizer attacks when throwing an exception in the constructor")
-	protected final void finalize() throws Throwable {
-		super.finalize();
 	}
 
 	/**

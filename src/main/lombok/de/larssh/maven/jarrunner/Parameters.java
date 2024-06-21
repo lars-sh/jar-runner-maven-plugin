@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @SuppressWarnings("PMD.DataClass")
-public class Parameters {
+public final class Parameters {
 	/**
 	 * Format for repository IDs of user argument repositories without ID.
 	 */
@@ -369,15 +369,6 @@ public class Parameters {
 		this.repositories = getRepositories(parseArgumentList(repositories));
 		this.ignoreSystemRepositories = ignoreSystemRepositories;
 		this.workingDirectory = Optionals.ofNonBlank(workingDirectory).map(Paths::get);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings({ "deprecation", "checkstyle:NoFinalizer", "java:S1113", "PMD.FinalizeOnlyCallsSuperFinalize" })
-	@SuppressFBWarnings(value = { "BED_BOGUS_EXCEPTION_DECLARATION", "FI_USELESS" },
-			justification = "finalize implemented as final method to avoid finalizer attacks when throwing an exception in the constructor")
-	protected final void finalize() throws Throwable {
-		super.finalize();
 	}
 
 	/**
