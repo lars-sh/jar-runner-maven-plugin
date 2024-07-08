@@ -24,7 +24,8 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
-import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
+import org.eclipse.aether.util.graph.visitor.NodeListGenerator;
+import org.eclipse.aether.util.graph.visitor.PreorderDependencyNodeConsumerVisitor;
 
 import de.larssh.utils.SystemUtils;
 import de.larssh.utils.io.ProcessBuilders;
@@ -52,9 +53,9 @@ public final class JarRunner {
 	 */
 	private static String getClassPath(final DependencyResult dependencyResult,
 			final Optional<String> classPathFormat) {
-		final PreorderNodeListGenerator preorderNodeListGenerator = new PreorderNodeListGenerator();
-		dependencyResult.getRoot().accept(preorderNodeListGenerator);
-		final String classPath = preorderNodeListGenerator.getClassPath();
+		final NodeListGenerator nodeListGenerator = new NodeListGenerator();
+		dependencyResult.getRoot().accept(new PreorderDependencyNodeConsumerVisitor(nodeListGenerator));
+		final String classPath = nodeListGenerator.getClassPath();
 		return classPathFormat.map(format -> String.format(format, classPath)).orElse(classPath);
 	}
 
