@@ -3,7 +3,6 @@ package de.larssh.maven.jarrunner;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -89,8 +88,8 @@ public final class JarRunner {
 		}
 
 		// by Manifest
-		final File jarFile = dependencyResult.getRoot().getArtifact().getFile();
-		try (JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(jarFile.toPath()))) {
+		final Path jarFile = dependencyResult.getRoot().getArtifact().getPath();
+		try (JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(jarFile))) {
 			final String mainClass = jarInputStream.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS);
 			if (!Strings.isBlank(mainClass)) {
 				return mainClass;
@@ -101,7 +100,7 @@ public final class JarRunner {
 		throw new MojoFailureException(Strings.format(
 				"Could not find a %s entry inside the root JARs [%s] manifest. You can provide a main class yourself using -DmainClass=...",
 				Name.MAIN_CLASS.toString(),
-				jarFile.getAbsolutePath()));
+				jarFile.toAbsolutePath()));
 	}
 
 	/**
