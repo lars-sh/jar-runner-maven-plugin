@@ -4,3 +4,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      - dependency-name: org.apache.maven.resolver:maven-resolver-api
+        versions: "[2.0.0,)"
+      - dependency-name: org.apache.maven.resolver:maven-resolver-util
+        versions: "[2.0.0,)"
