@@ -24,8 +24,7 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
-import org.eclipse.aether.util.graph.visitor.NodeListGenerator;
-import org.eclipse.aether.util.graph.visitor.PreorderDependencyNodeConsumerVisitor;
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
 
 import de.larssh.utils.SystemUtils;
 import de.larssh.utils.io.ProcessBuilders;
@@ -41,11 +40,21 @@ import lombok.Getter;
  * {@link #execute()}.
  */
 @Getter
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "deprecation", "PMD.ExcessiveImports" })
 public final class JarRunner {
 	/**
 	 * Combines the class paths of {@code dependencyResult} with the optional class
 	 * path format user argument.
+	 *
+	 * <p>
+	 * The following code avoids the use of deprecated classes but requires
+	 * maven-resolver-util 2 and higher.
+	 *
+	 * <pre>
+	 * final NodeListGenerator nodeListGenerator = new NodeListGenerator();
+	 * dependencyResult.getRoot().accept(new PreorderDependencyNodeConsumerVisitor(nodeListGenerator));
+	 * final String classPath = nodeListGenerator.getClassPath();
+	 * </pre>
 	 *
 	 * @param dependencyResult Resolved dependencies
 	 * @param classPathFormat  formatter value allowing modifying the class path
@@ -53,9 +62,9 @@ public final class JarRunner {
 	 */
 	private static String getClassPath(final DependencyResult dependencyResult,
 			final Optional<String> classPathFormat) {
-		final NodeListGenerator nodeListGenerator = new NodeListGenerator();
-		dependencyResult.getRoot().accept(new PreorderDependencyNodeConsumerVisitor(nodeListGenerator));
-		final String classPath = nodeListGenerator.getClassPath();
+		final PreorderNodeListGenerator preorderNodeListGenerator = new PreorderNodeListGenerator();
+		dependencyResult.getRoot().accept(preorderNodeListGenerator);
+		final String classPath = preorderNodeListGenerator.getClassPath();
 		return classPathFormat.map(format -> String.format(format, classPath)).orElse(classPath);
 	}
 
@@ -154,6 +163,7 @@ public final class JarRunner {
 	 * @return the resolved dependencies
 	 * @throws DependencyResolutionException if resolving dependencies failed
 	 */
+	@SuppressWarnings({ "checkstyle:SuppressWarnings", "resource" })
 	private static DependencyResult resolveDependencies(final Parameters parameters)
 			throws DependencyResolutionException {
 		final Dependency dependency = new Dependency(parameters.getArtifact(), DependencyScope.COMPILE.getValue());

@@ -1,10 +1,11 @@
 package de.larssh.maven.jarrunner;
 
+import javax.inject.Inject;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.eclipse.aether.RepositorySystem;
@@ -13,7 +14,7 @@ import org.eclipse.aether.RepositorySystemSession;
 import de.larssh.utils.Nullables;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 
 /**
@@ -27,8 +28,8 @@ import lombok.experimental.NonFinal;
  * The main class to execute can either be specified by argument or is taken
  * from the artifacts JAR.
  */
-@NoArgsConstructor
-@Mojo(name = "run", requiresDirectInvocation = true, requiresProject = false)
+@RequiredArgsConstructor(onConstructor_ = { @Inject })
+@Mojo(name = "run", requiresProject = false)
 @SuppressWarnings("PMD.ImmutableField")
 public class RunMojo extends AbstractMojo {
 	/**
@@ -42,10 +43,7 @@ public class RunMojo extends AbstractMojo {
 	/**
 	 * Aether Repository System
 	 */
-	@NonFinal
-	@Nullable
-	@Component
-	RepositorySystem repositorySystem = null;
+	RepositorySystem repositorySystem;
 
 	/**
 	 * Aether Repository System Session
@@ -185,8 +183,10 @@ public class RunMojo extends AbstractMojo {
 	@Override
 	@SuppressWarnings({
 			"checkstyle:IllegalCatch",
+			"checkstyle:SuppressWarnings",
 			"PMD.AvoidCatchingGenericException",
-			"PMD.AvoidRethrowingException" })
+			"PMD.AvoidRethrowingException",
+			"resource" })
 	@SuppressFBWarnings(value = { "REC_CATCH_EXCEPTION", "WEM_WEAK_EXCEPTION_MESSAGING" },
 			justification = "catching any exception at execution root")
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -224,7 +224,6 @@ public class RunMojo extends AbstractMojo {
 	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "dummy method")
 	private void nonFinalDummy() {
 		mavenSession = null;
-		repositorySystem = null;
 		repositorySystemSession = null;
 		artifact = null;
 		mainClass = null;
