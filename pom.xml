@@ -51,6 +51,7 @@
 
 	<properties>
 		<parent-pom.create-github-release-yml>true</parent-pom.create-github-release-yml>
+		<maven.compiler.showDeprecation>false</maven.compiler.showDeprecation>
 	</properties>
 
 	<dependencies>
