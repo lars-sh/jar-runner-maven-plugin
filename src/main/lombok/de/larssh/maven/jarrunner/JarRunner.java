@@ -24,8 +24,7 @@ import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
-import org.eclipse.aether.util.graph.visitor.NodeListGenerator;
-import org.eclipse.aether.util.graph.visitor.PreorderDependencyNodeConsumerVisitor;
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
 
 import de.larssh.utils.SystemUtils;
 import de.larssh.utils.io.ProcessBuilders;
@@ -47,15 +46,24 @@ public final class JarRunner {
 	 * Combines the class paths of {@code dependencyResult} with the optional class
 	 * path format user argument.
 	 *
+	 * <p>
+	 * The following code has already been prepared for maven-resolver-util v2:
+	 *
+	 * <pre>
+	 * final NodeListGenerator nodeListGenerator = new NodeListGenerator();
+	 * dependencyResult.getRoot().accept(new PreorderDependencyNodeConsumerVisitor(nodeListGenerator));
+	 * final String classPath = nodeListGenerator.getClassPath();
+	 * </pre>
+	 *
 	 * @param dependencyResult Resolved dependencies
 	 * @param classPathFormat  formatter value allowing modifying the class path
 	 * @return class path string
 	 */
 	private static String getClassPath(final DependencyResult dependencyResult,
 			final Optional<String> classPathFormat) {
-		final NodeListGenerator nodeListGenerator = new NodeListGenerator();
-		dependencyResult.getRoot().accept(new PreorderDependencyNodeConsumerVisitor(nodeListGenerator));
-		final String classPath = nodeListGenerator.getClassPath();
+		final PreorderNodeListGenerator preorderNodeListGenerator = new PreorderNodeListGenerator();
+		dependencyResult.getRoot().accept(preorderNodeListGenerator);
+		final String classPath = preorderNodeListGenerator.getClassPath();
 		return classPathFormat.map(format -> String.format(format, classPath)).orElse(classPath);
 	}
 
@@ -89,7 +97,7 @@ public final class JarRunner {
 		}
 
 		// by Manifest
-		final Path jarFile = dependencyResult.getRoot().getArtifact().getPath();
+		final Path jarFile = dependencyResult.getRoot().getArtifact().getFile().toPath();
 		try (JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(jarFile))) {
 			final String mainClass = jarInputStream.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS);
 			if (!Strings.isBlank(mainClass)) {
