@@ -40,15 +40,14 @@ import lombok.Getter;
  * {@link #execute()}.
  */
 @Getter
-@SuppressWarnings({ "deprecation", "PMD.ExcessiveImports" })
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class JarRunner {
 	/**
 	 * Combines the class paths of {@code dependencyResult} with the optional class
 	 * path format user argument.
 	 *
 	 * <p>
-	 * The following code avoids the use of deprecated classes but requires
-	 * maven-resolver-util 2 and higher.
+	 * The following code has already been prepared for maven-resolver-util v2:
 	 *
 	 * <pre>
 	 * final NodeListGenerator nodeListGenerator = new NodeListGenerator();
@@ -98,7 +97,7 @@ public final class JarRunner {
 		}
 
 		// by Manifest
-		final Path jarFile = dependencyResult.getRoot().getArtifact().getPath();
+		final Path jarFile = dependencyResult.getRoot().getArtifact().getFile().toPath();
 		try (JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(jarFile))) {
 			final String mainClass = jarInputStream.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS);
 			if (!Strings.isBlank(mainClass)) {
@@ -163,7 +162,6 @@ public final class JarRunner {
 	 * @return the resolved dependencies
 	 * @throws DependencyResolutionException if resolving dependencies failed
 	 */
-	@SuppressWarnings({ "checkstyle:SuppressWarnings", "resource" })
 	private static DependencyResult resolveDependencies(final Parameters parameters)
 			throws DependencyResolutionException {
 		final Dependency dependency = new Dependency(parameters.getArtifact(), DependencyScope.COMPILE.getValue());
