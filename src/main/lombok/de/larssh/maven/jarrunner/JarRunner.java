@@ -40,7 +40,6 @@ import lombok.Getter;
  * {@link #execute()}.
  */
 @Getter
-@SuppressWarnings("PMD.ExcessiveImports")
 public final class JarRunner {
 	/**
 	 * Combines the class paths of {@code dependencyResult} with the optional class

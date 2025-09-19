@@ -30,7 +30,6 @@ import lombok.experimental.NonFinal;
  */
 @RequiredArgsConstructor(onConstructor_ = { @Inject })
 @Mojo(name = "run", requiresProject = false)
-@SuppressWarnings("PMD.ImmutableField")
 public class RunMojo extends AbstractMojo {
 	/**
 	 * Maven Session
